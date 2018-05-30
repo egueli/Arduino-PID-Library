@@ -50,6 +50,9 @@ class PID
 										  //   once it is set in the constructor.
     void SetSampleTime(int);              // * sets the frequency, in Milliseconds, with which 
                                           //   the PID calculation is performed.  default is 100
+
+    void SetTimeFunction(unsigned long (*func)()); // Set the time function. Useful for non-realtime usage,
+                                                   // e.g. for testing. It points to millis() by default.
 										  
 										  
 										  
@@ -85,6 +88,7 @@ class PID
 	unsigned long SampleTime;
 	double outMin, outMax;
 	bool inAuto, pOnE;
+	unsigned long (*timeFunction)();
 };
 #endif
 

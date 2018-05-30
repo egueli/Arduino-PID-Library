@@ -24,6 +24,7 @@ PID::PID(double* Input, double* Output, double* Setpoint,
     myInput = Input;
     mySetpoint = Setpoint;
     inAuto = false;
+    timeFunction = millis;
 
     PID::SetOutputLimits(0, 255);				//default output limit corresponds to
 												//the arduino pwm limits
@@ -33,7 +34,7 @@ PID::PID(double* Input, double* Output, double* Setpoint,
     PID::SetControllerDirection(ControllerDirection);
     PID::SetTunings(Kp, Ki, Kd, POn);
 
-    lastTime = millis()-SampleTime;
+    lastTime = timeFunction()-SampleTime;
 }
 
 /*Constructor (...)*********************************************************
@@ -58,7 +59,7 @@ PID::PID(double* Input, double* Output, double* Setpoint,
 bool PID::Compute()
 {
    if(!inAuto) return false;
-   unsigned long now = millis();
+   unsigned long now = timeFunction();
    unsigned long timeChange = (now - lastTime);
    if(timeChange>=SampleTime)
    {
@@ -180,6 +181,10 @@ void PID::SetMode(int Mode)
         PID::Initialize();
     }
     inAuto = newAuto;
+}
+
+void PID::SetTimeFunction(unsigned long (*newTimeFunction)()) {
+  timeFunction = newTimeFunction;
 }
 
 /* Initialize()****************************************************************
